@@ -61,6 +61,6 @@ app.configure('production', function() {
 });
 
 
-app.listen(3000);
+app.listen(80);
 
 console.log('TMW.js server listening on port %s', app.address().port);
