@@ -63,4 +63,4 @@ app.configure('production', function() {
 
 app.listen(80);
 
-console.log('TMW.js server listening on port %s', app.address().port);
+console.log('Mana.js server listening on port %s', app.address().port);
