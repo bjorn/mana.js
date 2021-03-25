@@ -1,14 +1,16 @@
-var express = require('express');
+const express = require('express');
+const morgan = require('morgan');
 
-var app = express.createServer();
-var io = require('socket.io').listen(app);
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 var players = [];
 var nextId = 0;
 
 // Game server part
 
-io.sockets.on('connection', function(socket) {
+io.on('connection', function(socket) {
     var player
 
     socket.on('logon', function(pos) {
@@ -44,23 +46,13 @@ io.sockets.on('connection', function(socket) {
 
 // HTTP server part
 
-app.configure(function() {
-    app.get('/version', function(req, res) {
-        res.send('0.0.1');
-    });
-    app.use(express.logger());
-    app.use(express.static(__dirname));
+app.get('/version', function(req, res) {
+    res.send('0.0.1');
+});
+app.use(morgan('combined'))
+app.use(express.static(__dirname));
+
+server.listen(() => {
+    console.log('Mana.js server listening on', server.address());
 });
 
-app.configure('development', function() {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function() {
-    app.use(express.errorHandler());
-});
-
-
-app.listen(80);
-
-console.log('Mana.js server listening on port %s', app.address().port);
